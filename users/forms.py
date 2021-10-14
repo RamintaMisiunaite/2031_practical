@@ -5,7 +5,7 @@ from wtforms.validators import Required, Email, ValidationError, Length, EqualTo
 
 
 def character_check(form, field):
-    excluded_chars = "*?!'^+%&/()=}][{$#@<>"
+    excluded_chars = "*?!'^+%&/()=}][{$#@<> "
     for char in field.data:
         if char in excluded_chars:
             raise ValidationError(
@@ -15,7 +15,6 @@ def character_check(form, field):
 def pin_check(form, field):
     if len(field.data) != 32:
         raise ValidationError('PIN must be 32 characters')
-
 
 
 class RegisterForm(FlaskForm):
@@ -35,3 +34,8 @@ class RegisterForm(FlaskForm):
         if not p.match(self.password.data):
             raise ValidationError("Password must contain at least 1 digit, 1 lowercase, "
                                   "1 uppercase and 1 special character")
+
+    def validate_phone(self, phone):
+        p = re.compile(r'\d\d\d\d-\d\d\d-\d\d\d\d')
+        if not p.match(self.phone.data):
+            raise ValidationError("Phone must be of the form XXXX-XXX-XXXX")
