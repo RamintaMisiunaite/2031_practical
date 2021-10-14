@@ -1,6 +1,7 @@
 # IMPORTS
 import socket
 from flask import Flask, render_template
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 # CONFIG
@@ -45,7 +46,6 @@ def server_unavailable(error):
     return render_template('503.html'), 503
 
 
-
 if __name__ == "__main__":
     my_host = "127.0.0.1"
     free_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,6 +53,18 @@ if __name__ == "__main__":
     free_socket.listen(5)
     free_port = free_socket.getsockname()[1]
     free_socket.close()
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'users.login'
+    login_manager.init_app(app)
+
+    from models import User
+
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
 
     # BLUEPRINTS
     # import blueprints
