@@ -29,6 +29,14 @@
                             {% endfor %}
                         </div>
                     </div>
+                    <div class="field">
+                        <div class="control">
+                            {{ form.pin_key(class="input", placeholder="Time-Based PIN") }}
+                            {% for error in form.pin_key.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
 
                     <div>
                         {{ form.submit(class="button is-info is-centered") }}
