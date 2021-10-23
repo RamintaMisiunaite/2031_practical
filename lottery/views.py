@@ -2,7 +2,7 @@
 import logging
 
 from flask import Blueprint, render_template, request, flash
-
+from flask_login import login_required
 from app import db
 from models import Draw, User
 
