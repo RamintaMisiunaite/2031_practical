@@ -105,7 +105,7 @@ def login():
         if user.role == 'user':
             return profile()
         elif user.role == 'admin':
-            return account()
+            return redirect(url_for('admin.admin'))
 
     return render_template('login.html', form=form)
 
