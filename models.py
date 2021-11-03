@@ -76,6 +76,9 @@ class Draw(db.Model):
         self.win = win
         self.round = round
 
+    def encrypt(self, draw_key):
+        self.draw = encrypt(self.draw, draw_key)
+
     def view_draw(self, draw_key):
         self.draw = decrypt(self.draw, draw_key)
 
@@ -93,5 +96,3 @@ def init_db():
 
     db.session.add(admin)
     db.session.commit()
-
-

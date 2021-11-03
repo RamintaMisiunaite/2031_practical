@@ -1,6 +1,5 @@
 # IMPORTS
 import logging
-from functools import wraps
 from datetime import datetime
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import login_user, logout_user

@@ -1,10 +1,10 @@
 # IMPORTS
-import logging
 
 from flask import Blueprint, render_template, request, flash
 from flask_login import login_required, current_user
 from app import db, requires_roles
 from models import Draw, User
+import copy
 
 # CONFIG
 lottery_blueprint = Blueprint('lottery', __name__, template_folder='templates')
@@ -29,7 +29,6 @@ def add_draw():
     submitted_draw.strip()
 
     # create a new draw with the form data.
-
     new_draw = Draw(user_id=current_user.id, draw=submitted_draw, win=False, round=0, draw_key=current_user.draw_key)
 
     # add the new draw to the database
@@ -67,12 +66,18 @@ def view_draws():
 def check_draws():
     # get played draws
     played_draws = Draw.query.filter_by(played=True, user_id=current_user.id).all()
-    for p in played_draws:
-        p.view_draw(current_user.draw_key)
+
+    # decrypt all the player's draws
+    played_draws_copy = copy.deepcopy(played_draws)
+    decrypted_draws = []
+    for p in played_draws_copy:
+        user = User.query.filter_by(id=p.user_id).first()
+        p.view_draw(user.draw_key)
+        decrypted_draws.append(p)
 
     # if played draws exist
     if len(played_draws) != 0:
-        return render_template('lottery.html', results=played_draws, played=True)
+        return render_template('lottery.html', results=decrypted_draws, played=True)
 
     # if no played draws exist [all draw entries have been played therefore wait for next lottery round]
     else:

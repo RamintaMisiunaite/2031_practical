@@ -43,7 +43,7 @@ csp = {
         '\'unsafe-inline\''
     ]
 }
-talisman = Talisman(app, content_security_policy=csp)
+talisman = Talisman(app, content_security_policy=csp, x_content_type_options=False)
 
 
 # FUNCTIONS
